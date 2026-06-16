@@ -3,8 +3,8 @@
 
 The script checks two things:
 1. translation_units.json has complete source, translation, and explanation fields.
-2. Final Markdown notes do not contain English source quote/list blocks without a
-   nearby Chinese translation label.
+2. Final Markdown notes do not contain English source quote/list blocks unless
+   the same block also contains Chinese translation text.
 
 Usage:
   python audit_translations.py translation_units.json notes.md report.json
@@ -23,7 +23,6 @@ from typing import Any
 CHINESE_RE = re.compile(r"[\u4e00-\u9fff]")
 ENGLISH_RE = re.compile(r"[A-Za-z]")
 FENCE_RE = re.compile(r"^\s*```")
-TRANSLATION_LABEL_RE = re.compile(r"(中文翻译|中文参考答案|中文译文|翻译：|翻译:)")
 
 
 def has_chinese(text: str) -> bool:
@@ -42,6 +41,28 @@ def searchable_markdown(text: str) -> str:
     text = re.sub(r"(?m)^\s*>\s?", "", text or "")
     text = re.sub(r"(?m)^\s*[-*]\s+", "", text)
     return normalize_space(text)
+
+
+def searchable_lines(text: str) -> list[str]:
+    lines: list[str] = []
+    for raw in (text or "").splitlines():
+        cleaned = searchable_markdown(raw)
+        if cleaned:
+            lines.append(cleaned)
+    return lines
+
+
+def missing_units(text: str, normalized_notes: str, min_len: int = 12) -> list[str]:
+    compact = searchable_markdown(text)
+    if not compact:
+        return []
+    if len(compact) >= 30 and compact in normalized_notes:
+        return []
+    missing: list[str] = []
+    for line in searchable_lines(text):
+        if len(line) >= min_len and line not in normalized_notes:
+            missing.append(line)
+    return missing
 
 
 def load_units(path: Path) -> tuple[list[dict[str, Any]], list[str]]:
@@ -77,7 +98,7 @@ def load_units(path: Path) -> tuple[list[dict[str, Any]], list[str]]:
 
 
 def iter_note_blocks(text: str) -> list[dict[str, Any]]:
-    """Return English-heavy quote/list blocks that should normally be translated."""
+    """Return English quote/list blocks that do not include inline Chinese."""
     blocks: list[dict[str, Any]] = []
     lines = text.splitlines()
     in_code = False
@@ -122,42 +143,55 @@ def iter_note_blocks(text: str) -> list[dict[str, Any]]:
     return blocks
 
 
-def has_nearby_translation(lines: list[str], end_line: int, lookahead: int) -> bool:
-    begin = end_line
-    end = min(len(lines), end_line + lookahead)
-    window = "\n".join(lines[begin:end])
-    return bool(TRANSLATION_LABEL_RE.search(window) and has_chinese(window))
-
-
 def audit_notes(notes_path: Path, units: list[dict[str, Any]], lookahead: int) -> list[dict[str, Any]]:
     text = notes_path.read_text(encoding="utf-8-sig")
-    lines = text.splitlines()
     issues: list[dict[str, Any]] = []
 
     for block in iter_note_blocks(text):
-        if not has_nearby_translation(lines, block["end_line"], lookahead):
-            issues.append(
-                {
-                    "kind": "missing_nearby_translation",
-                    "line": block["line"],
-                    "text": block["text"][:220],
-                    "message": "English source block is not followed by a nearby Chinese translation label.",
-                }
-            )
+        issues.append(
+            {
+                "kind": "missing_inline_translation",
+                "line": block["line"],
+                "text": block["text"][:220],
+                "message": "English source block must include Chinese translation inside the same quote/list block.",
+            }
+        )
 
     normalized_notes = searchable_markdown(text)
     for unit in units:
-        source = searchable_markdown(str(unit.get("source", "")))
-        if not source:
+        source_raw = str(unit.get("source", ""))
+        translation_raw = str(unit.get("translation", ""))
+        explanation_raw = str(unit.get("explanation", ""))
+        if not searchable_markdown(source_raw):
             continue
-        probe = source[:120]
-        if len(probe) >= 30 and probe not in normalized_notes:
+        missing_source = missing_units(source_raw, normalized_notes, min_len=12)
+        if missing_source:
             issues.append(
                 {
                     "kind": "unit_not_found_in_notes",
                     "unit_id": unit.get("id"),
-                    "source_preview": probe,
+                    "source_preview": missing_source[:5],
                     "message": "translation_units.json source does not appear in final notes.",
+                }
+            )
+        missing_translation = missing_units(translation_raw, normalized_notes, min_len=6)
+        if missing_translation:
+            issues.append(
+                {
+                    "kind": "translation_not_found_in_notes",
+                    "unit_id": unit.get("id"),
+                    "translation_preview": missing_translation[:5],
+                    "message": "translation_units.json translation does not appear in final notes.",
+                }
+            )
+        missing_explanation = missing_units(explanation_raw, normalized_notes, min_len=12)
+        if missing_explanation:
+            issues.append(
+                {
+                    "kind": "explanation_not_found_in_notes",
+                    "unit_id": unit.get("id"),
+                    "explanation_preview": missing_explanation[:5],
+                    "message": "translation_units.json explanation does not appear in final notes.",
                 }
             )
     return issues

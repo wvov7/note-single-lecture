@@ -80,7 +80,7 @@ If rendering fails, create the PNG by another reliable local method, but still d
 
 ### 3. Build translation units before writing the prompt
 
-Create `note-single-lecture-work/<pdf-stem>/translation_units.json` before generating the note prompt. This file is the hard contract that prevents untranslated English source text.
+Create `note-single-lecture-work/<pdf-stem>/translation_units.json` before generating the note prompt. This file is the hard contract that prevents untranslated English source text while keeping the final notes compact.
 
 Include one unit for every English source item that will appear in the final notes, including:
 
@@ -121,24 +121,36 @@ Create `note-single-lecture-work/<pdf-stem>/<pdf-stem>_笔记生成提示词.md`
 - Name the source lecture file and generated mind map file.
 - Require theme-based Markdown headings, not slide-by-slide notes.
 - Require Chinese explanation; no pure-English explanatory prose outside preserved source quotations/code.
-- Require every preserved English source quote, English bullet list, English numbered list, `Purpose`, example, answer, or visual text to follow this exact local structure:
+- Require every preserved English source quote, English bullet list, English numbered list, `Purpose`, example, answer, or visual text to use one of these compact bilingual quote structures.
+
+For ordinary sentence/paragraph source, use this A-style structure:
 
 ```markdown
-原文（Source）：
-> Complete original English text.
-
-中文翻译：完整中文翻译。
+> Complete original English text.  
+> 完整中文翻译。
 
 中文解释：解释该原文在课程中的含义。
 ```
 
-- For English source lists, preserve the English list first, then provide a matching Chinese translated list with the same number and order of items, then add Chinese explanation.
+For English bullet or numbered lists, use this B-style structure with each original item immediately followed by its Chinese translation inside the same quote block:
+
+```markdown
+> - login session IDs  
+>   登录会话 ID
+> - user preferences (language, theme)  
+>   用户偏好，例如语言和主题
+
+中文解释：解释该原文在课程中的含义。
+```
+
+- Do not create a separate `中文翻译：` paragraph for source quotes/lists unless the source is too complex for inline pairing. Prefer A-style and B-style blocks to reduce redundancy.
+- For English source lists, preserve every English item and put its Chinese translation immediately below it in the same block, with the same number and order of items.
 - Require the final notes to use `translation_units.json` as the authoritative source for all source-translation-explanation blocks.
 - Require complete definition handling: when the lecture provides a concept definition, include the original English definition in full, then add a Chinese translation/explanation. Do not compress the source definition into a summary.
 - Require key terms and definitions as `中文（English）`.
 - Require diagram/screenshot explanations.
 - Require example/exercise/question handling for every course-content example, exercise, quiz, or past-paper question in the lecture: include the English prompt when useful, a complete Chinese translation, a Chinese explanation, and an answer section.
-- If the PDF provides an answer, preserve the original English answer completely, including all numbered or bulleted sub-points, and then add a Chinese translation/explanation. Do not compress, paraphrase away, or replace an original answer with a shorter "strong answer" summary.
+- If the PDF provides an answer, preserve the original English answer completely, including all numbered or bulleted sub-points, pair each item with complete Chinese translation inside the same quote/list block, and then add Chinese explanation. Do not compress, paraphrase away, or replace an original answer with a shorter "strong answer" summary.
 - For supplemental reference answers, require a complete Chinese translation of the supplemental English answer, preserving all numbered/bulleted points and sub-points. Do not replace the Chinese translation with a shorter explanation or study note.
 - If no answer is provided, write a plausible reference answer in both English and Chinese and mark it as `补充参考答案（Supplemental Reference Answer）`.
 - Ignore non-course-content administrative information such as the opening lecturer name/affiliation and closing email/contact/forum/Q&A channel unless the user explicitly asks to include it.
@@ -192,6 +204,7 @@ Before final response:
 - Confirm Markdown code fences are balanced.
 - Confirm key terms preserve English names.
 - Confirm concepts with source definitions preserve the full original English definition and include both a complete Chinese translation and a Chinese explanation.
+- Confirm preserved English quote/list blocks use compact A-style or B-style bilingual blocks, with Chinese translation inside the same quote/list block rather than in a separate `中文翻译：` paragraph.
 - Confirm all examples/exercises/questions have answer treatment: existing answers are complete and keep their original numbered/bulleted structure before translation; missing answers have bilingual supplemental reference answers.
 - Confirm supplemental reference answers include a complete Chinese translation matching the English answer's points and structure, not a shorter Chinese explanation.
 - Confirm administrative-only lecturer/contact/forum/Q&A-channel content is omitted unless explicitly requested.
