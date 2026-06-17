@@ -1,6 +1,24 @@
-# note-single-lecture
+# note-single-lecture-skill
 
-自用英方课单讲课件复习 skill。用于把一个 lecture PDF/PPT 整理成：
+英方课复习 skill 合集仓库。根目录为 **note-single-lecture**（单讲笔记）；[`skills/`](skills/README.md) 目录含更多由 **Youhan Huang** 用 **Cursor Composer 2.5** 归纳的复习 workflow。
+
+## Skill 一览
+
+| 类别 | Skill | 说明 |
+|------|-------|------|
+| 根目录 | [note-single-lecture](SKILL.md) | 单讲：思维导图 → 提示词 → 课程笔记 |
+| 开卷 | [layered-index](skills/open-book/layered-index/SKILL.md) | 分层索引（Topic → PDF 页码） |
+| 闭卷 | [exam-focus](skills/closed-book/exam-focus/SKILL.md) | 考试重点与考点权重 |
+| 闭卷 | [full-course-highlights](skills/closed-book/full-course-highlights/SKILL.md) | 全部课件要点汇总 |
+| 闭卷 | [single-lecture-analysis](skills/closed-book/single-lecture-analysis/SKILL.md) | 单课件深入分析 |
+
+详见 [skills/README.md](skills/README.md)。
+
+---
+
+## note-single-lecture
+
+把一个 lecture PDF/PPT 整理成：
 
 1. 思维导图 PNG
 2. 笔记生成提示词 MD
@@ -106,7 +124,15 @@ scripts/render_mindmap.py
 
 ```text
 .
-├── SKILL.md
+├── SKILL.md                          # note-single-lecture（根 skill）
+├── skills/
+│   ├── README.md
+│   ├── open-book/
+│   │   └── layered-index/
+│   └── closed-book/
+│       ├── exam-focus/
+│       ├── full-course-highlights/
+│       └── single-lecture-analysis/
 ├── agents/
 │   └── openai.yaml
 ├── references/
@@ -114,3 +140,10 @@ scripts/render_mindmap.py
 └── scripts/
     └── render_mindmap.py
 ```
+
+## 贡献者
+
+| 贡献 | 作者 | 工具 |
+|------|------|------|
+| `note-single-lecture` 及脚本 | 仓库维护者 | — |
+| `skills/` 下扩展 workflow | Youhan Huang | Cursor Composer 2.5 |
