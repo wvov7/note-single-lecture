@@ -4,13 +4,13 @@
 
 ## Skill 一览
 
-| Skill | 说明 |
-|-------|------|
-| [note-single-lecture](SKILL.md) | 单讲：思维导图 → 提示词 → 课程笔记 |
-| [note-lecture-deep-dive](skills/note-lecture-deep-dive/SKILL.md) | 逐讲深度精讲，逻辑重排 |
-| [note-exam-lecture-map](skills/note-exam-lecture-map/SKILL.md) | 课件 + 往年题考点权重 |
-| [note-open-book-index](skills/note-open-book-index/SKILL.md) | 开卷索引（知识点 → 页码） |
-| [note-qa-with-citation](skills/note-qa-with-citation/SKILL.md) | 问答/整卷，附课件页码 |
+| 类别 | Skill | 说明 |
+|------|-------|------|
+| 根目录 | [note-single-lecture](SKILL.md) | 单讲：思维导图 → 提示词 → 课程笔记 |
+| 开卷 | [layered-index](skills/open-book/layered-index/SKILL.md) | 分层索引（Topic → PDF 页码） |
+| 闭卷 | [exam-focus](skills/closed-book/exam-focus/SKILL.md) | 考试重点与考点权重 |
+| 闭卷 | [full-course-highlights](skills/closed-book/full-course-highlights/SKILL.md) | 全部课件要点汇总 |
+| 闭卷 | [single-lecture-analysis](skills/closed-book/single-lecture-analysis/SKILL.md) | 单课件深入分析 |
 
 详见 [skills/README.md](skills/README.md)。
 
@@ -126,11 +126,13 @@ scripts/render_mindmap.py
 .
 ├── SKILL.md                          # note-single-lecture（根 skill）
 ├── skills/
-│   ├── README.md                     # skill 索引与选型指南
-│   ├── note-lecture-deep-dive/
-│   ├── note-exam-lecture-map/
-│   ├── note-open-book-index/
-│   └── note-qa-with-citation/
+│   ├── README.md
+│   ├── open-book/
+│   │   └── layered-index/
+│   └── closed-book/
+│       ├── exam-focus/
+│       ├── full-course-highlights/
+│       └── single-lecture-analysis/
 ├── agents/
 │   └── openai.yaml
 ├── references/

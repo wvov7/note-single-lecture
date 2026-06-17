@@ -1,52 +1,53 @@
 # Skills Catalog
 
-英方课复习 skill 合集。除根目录 `note-single-lecture` 外，本目录收录 Youhan Huang 基于 **Cursor Composer 2.5** 实际复习流程整理的扩展 skill。
+英方课复习 skill 索引。`skills/` 按考试形式分为两层目录；根目录 [`SKILL.md`](../SKILL.md) 为单讲笔记 workflow（`note-single-lecture`）。
 
-| Skill | 路径 | 适用场景 | 典型输出 |
-|-------|------|----------|----------|
-| **note-single-lecture** | [`../SKILL.md`](../SKILL.md) | 单讲高精度笔记：思维导图 → 提示词 → 课程笔记 | `note-single-lecture/<stem>_课程笔记.md` |
-| **note-lecture-deep-dive** | [`note-lecture-deep-dive/SKILL.md`](note-lecture-deep-dive/SKILL.md) | 逐讲深度精讲，逻辑重排，动态深度 | `<Course>_L<n>_精讲.md` |
-| **note-exam-lecture-map** | [`note-exam-lecture-map/SKILL.md`](note-exam-lecture-map/SKILL.md) | 课件逐页概括 + 往年题考点权重 | `exam_lecture_stat.md` |
-| **note-open-book-index** | [`note-open-book-index/SKILL.md`](note-open-book-index/SKILL.md) | 开卷考试：知识点 → 页码索引 + 押题 | `revision_exam.md` |
-| **note-qa-with-citation** | [`note-qa-with-citation/SKILL.md`](note-qa-with-citation/SKILL.md) | 问答 / 整卷作答，严格附课件页码 | `answer.md` |
-
-## 如何选择
+## Directory Structure
 
 ```text
-只复习某一讲、要高质量中文笔记     → note-single-lecture
-要彻底吃透几讲、愿意读长文精讲     → note-lecture-deep-dive
-考前盘考点、对照往年题             → note-exam-lecture-map
-开卷考、考场只要页码不要解释       → note-open-book-index
-零散问题或整卷练习、要溯源         → note-qa-with-citation
+skills/
+├── open-book/
+│   └── layered-index/          # 开卷：分层索引
+└── closed-book/
+    ├── exam-focus/               # 闭卷：考试重点
+    ├── full-course-highlights/   # 闭卷：全部课件重点
+    └── single-lecture-analysis/  # 闭卷：单课件深入分析
 ```
 
-## 安装到 Cursor
+## Skill Reference
 
-将整个仓库 clone 到本地后，把需要的 skill **子目录** 复制或链接到 Cursor skills 目录：
+| Category | Skill | Purpose | Default output |
+|----------|-------|---------|----------------|
+| Open-book | [layered-index](open-book/layered-index/SKILL.md) | 分层索引：Block → 课件 → Topic/Page | `revision_exam.md` |
+| Closed-book | [exam-focus](closed-book/exam-focus/SKILL.md) | 历年试题与课件交叉分析，考点权重 | `exam_lecture_summary.md` |
+| Closed-book | [full-course-highlights](closed-book/full-course-highlights/SKILL.md) | 全部课件逐页要点汇总 | `exam_lecture_stat.md` |
+| Closed-book | [single-lecture-analysis](closed-book/single-lecture-analysis/SKILL.md) | 单讲逻辑重组与分级深度分析 | `<Course>_L<n>_analysis.md` |
+| Root | [note-single-lecture](../SKILL.md) | 单讲笔记：思维导图 → 提示词 → 笔记 | `note-single-lecture/<stem>_课程笔记.md` |
+
+## Selection Guide
+
+| Requirement | Skill |
+|-------------|-------|
+| 开卷考试，需 Topic → PDF 页码检索 | `open-book/layered-index` |
+| 闭卷考试，需确定复习优先级 | `closed-book/exam-focus` |
+| 闭卷考试，需全课覆盖清单 | `closed-book/full-course-highlights` |
+| 闭卷考试，需深入理解单讲 | `closed-book/single-lecture-analysis` |
+| 单讲结构化中文笔记 | `note-single-lecture`（根目录） |
+
+## Installation (Cursor)
+
+将所需 skill 子目录复制至 Cursor skills 路径：
 
 ```powershell
-# 示例：安装 deep-dive skill
-Copy-Item -Recurse "D:\Study\skill\note-single-lecture-skill\skills\note-lecture-deep-dive" `
-  "$env:USERPROFILE\.cursor\skills\note-lecture-deep-dive"
+Copy-Item -Recurse "<repo>\skills\closed-book\exam-focus" `
+  "$env:USERPROFILE\.cursor\skills\closed-book-exam-focus"
 ```
 
-根目录 `note-single-lecture` 安装方式见 [README.md](../README.md)。
+根 skill 安装方式见 [README.md](../README.md)。
 
-## 作者与工具
+## Attribution
 
-| 字段 | 值 |
-|------|-----|
-| **扩展 skill 作者** | Youhan Huang |
-| **开发工具** | Cursor Composer 2.5 |
-| **来源** | 从 `D:\Study\大三\` 多门课真实复习 prompt 归纳 |
-| **根 skill** | 仓库原作者维护的 `note-single-lecture` |
-
-## 已验证课程
-
-| Skill | 课程 |
-|-------|------|
-| note-single-lecture | 交互式媒体设计 (Lecture 4 等) |
-| note-lecture-deep-dive | 数字音频基础, 图形与视频处理 |
-| note-exam-lecture-map | 交互式媒体设计, 数字音频基础 |
-| note-open-book-index | 软件工程 |
-| note-qa-with-citation | 图形与视频处理, 外国文学鉴赏 |
+| Field | Value |
+|-------|-------|
+| Author | Youhan Huang |
+| Tool | Cursor Composer 2.5 |
