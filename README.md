@@ -145,5 +145,5 @@ scripts/render_mindmap.py
 
 | 贡献 | 作者 | 工具 |
 |------|------|------|
-| `note-single-lecture` 及脚本 | 仓库维护者 | — |
+| `note-single-lecture` 及脚本 | Bowen Qu | — |
 | `skills/` 下扩展 workflow | Youhan Huang | Cursor Composer 2.5 |
